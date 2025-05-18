@@ -2,5 +2,6 @@ flask
 pandas
 langdetect
 sentence-transformers
-torch==1.13.1
+torch==2.0.1
+
 
