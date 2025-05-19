@@ -1,24 +1,22 @@
-# app.py
-
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, url_for
 from sentence_transformers import SentenceTransformer, util
 import pandas as pd
-import difflib
 from langdetect import detect, DetectorFactory
-DetectorFactory.seed = 0
 
+DetectorFactory.seed = 0
 app = Flask(__name__)
 
 # تحميل النموذج السياقي
 semantic_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 # تحميل قاعدة البيانات
-df = pd.read_csv("phrases_vedio_langue.csv")  # غيّر اسم الملف حسب اسم قاعدة بياناتك
+df = pd.read_csv("phrases_vedio_langue.csv")
 
-# كلمات مفتاحية للغة
+# كلمات مفتاحية للغات
 french_keywords = ['bonjour', 'merci', 'comment', 's’il vous plaît', 'au revoir']
 english_keywords = ['hello', 'thank', 'please', 'bye']
 
+# دالة كشف اللغة
 def detect_language(text):
     text = text.lower().strip()
     if len(text.split()) == 1 or len(text) < 5:
@@ -37,6 +35,7 @@ def detect_language(text):
     except:
         return 'en'
 
+# دالة إيجاد الفيديو الأنسب
 def get_video_for_input(text, df):
     text = text.lower().strip()
     language = detect_language(text)
@@ -71,6 +70,7 @@ def get_video_for_input(text, df):
     else:
         return []
 
+# مسار API
 @app.route('/get-video', methods=['POST'])
 def get_video():
     data = request.get_json()
@@ -79,8 +79,15 @@ def get_video():
         return jsonify({"error": "No text provided"}), 400
 
     results = get_video_for_input(user_text, df)
-    return jsonify({"videos": results})
 
+    # تحويل المسارات إلى روابط مباشرة من مجلد static
+    full_video_urls = [
+        url_for('static', filename=f"{path}.mp4", _external=True)
+        for path in results
+    ]
+
+    return jsonify({"videos": full_video_urls})
+
+# تشغيل الخادم
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
-

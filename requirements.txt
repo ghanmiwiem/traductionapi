@@ -4,4 +4,3 @@ langdetect
 sentence-transformers
 torch==2.2.2
 numpy<2
-
