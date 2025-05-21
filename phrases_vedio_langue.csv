@@ -53,7 +53,7 @@ Bibliotheque,render/fr/Bibliotheque.mp4,fr
 Bienvenue,render/fr/Bienvenue.mp4,fr
 Billetterie,render/fr/Billetterie.mp4,fr
 Boire,render/fr/Boire.mp4,fr
-Bonjour,render/fr/Bonjour.mp4,fr
+Bonjour,fr/Bonjour,fr
 Bravo,render/fr/bravo.mp4,fr
 Bureau,render/fr/Bureau.mp4,fr
 Cafe,render/fr/Cafe.mp4,fr
@@ -132,24 +132,24 @@ Ranger,render/fr/Ranger.mp4,fr
 Recommencer,render/fr/Recommencer.mp4,fr
 Rencontrer,render/fr/Rencontrer.mp4,fr
 Reservation,render/fr/Reservation.mp4,fr
-Responsable,render/fr/Responsable.mp4,fr
-Restaurant,render/fr/Restaurant.mp4,fr
-Rire,render/fr/rire.mp4,fr
-Samedi,render/fr/Samedi.mp4,fr
-Semaine,render/fr/Semaine.mp4,fr
-Sepromener,render/fr/sepromener.mp4,fr
-Septembre,render/fr/Septembre.mp4,fr
-Siteplait,render/fr/siteplait.mp4,fr
-Silvousplait,render/fr/Silvousplait.mp4,fr
-Soleil,render/fr/Soleil.mp4,fr
-Sortie,render/fr/Sortie.mp4,fr
-Stop,render/fr/stop.mp4,fr
-Terre,render/fr/Terre.mp4,fr
-Toilettes,render/fr/Toilettes.mp4,fr
-Toutdroit,render/fr/Toutdroit.mp4,fr
-Triste,render/fr/triste.mp4,fr
-Vendredi,render/fr/Vendredi.mp4,fr
-Vestiaire,render/fr/Vestiaire.mp4,fr
-Veux tu boire,render/fr/veux_tu_boire.mp4,fr
-Voiture,render/fr/voiture.mp4,fr
+Responsable,fr/Responsable,fr
+Restaurant,fr/Restaurant,fr
+Rire,fr/rire,fr
+Samedi,fr/Samedi,fr
+Semaine,fr/Semaine,fr
+Sepromener,fr/sepromener,fr
+Septembre,fr/Septembre,fr
+Siteplait,fr/siteplai,fr
+Silvousplait,fr/Silvousplait,fr
+Soleil,fr/Soleil,fr
+Sortie,fr/Sortie,fr
+Stop,fr/stop,fr
+Terre,fr/Terre,fr
+Toilettes,fr/Toilettes,fr
+Toutdroit,fr/Toutdroit,fr
+Triste,fr/triste,fr
+Vendredi,fr/Vendredi,fr
+Vestiaire,fr/Vestiaire,fr
+Veux tu boire,fr/veux_tu_boire,fr
+Voiture,fr/voiture,fr
 
