@@ -1,17 +1,9 @@
-# Web framework
 Flask==2.2.5
-
-# Data handling
 pandas==1.5.3
 langdetect==1.0.9
-
-# Sentence Transformers & dependencies
 sentence-transformers==2.2.2
 transformers==4.31.0
-
-# Deep learning backend
+huggingface_hub==0.14.1
 torch==2.2.2
 numpy<2
-
-# (اختياري) إذا كنت تستخدم scikit-learn في أي مكان
 scikit-learn==1.2.2
