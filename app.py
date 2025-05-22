@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, url_for
 from sentence_transformers import SentenceTransformer, util
 import pandas as pd
 from langdetect import detect, DetectorFactory
+import re
 
 DetectorFactory.seed = 0
 app = Flask(__name__)
@@ -12,13 +13,23 @@ semantic_model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 # تحميل قاعدة البيانات
 df = pd.read_csv("phrases_vedio_langue.csv")
 
-# كلمات مفتاحية للغات
-french_keywords = ['bonjour', 'merci', 'comment', 's’il vous plaît', 'au revoir']
-english_keywords = ['hello', 'thank', 'please', 'bye']
+# دالة تنظيف وتطبيع النص
+def normalize(text):
+    text = text.lower()
+    text = re.sub(r'[^\w\s]', '', text)  # إزالة علامات الترقيم
+    text = re.sub(r'\s+', ' ', text).strip()  # إزالة الفراغات الزائدة
+    return text
+
+# تطبيع كل الجمل في قاعدة البيانات مسبقًا
+df['normalized_phrase'] = df['phrase'].apply(normalize)
+
+# كلمات مفتاحية بسيطة لتقوية كشف اللغة
+french_keywords = ['bonjour', 'merci', 'comment', 's’il vous plaît', 'au revoir', 'demain']
+english_keywords = ['hello', 'thank', 'please', 'bye', 'tomorrow']
 
 # دالة كشف اللغة
 def detect_language(text):
-    text = text.lower().strip()
+    text = normalize(text)
     if len(text.split()) == 1 or len(text) < 5:
         if text in french_keywords:
             return 'fr'
@@ -26,40 +37,35 @@ def detect_language(text):
             return 'en'
     try:
         lang = detect(text)
-        if lang.startswith('fr'):
-            return 'fr'
-        elif lang.startswith('en'):
-            return 'en'
-        else:
-            return 'en'
+        return 'fr' if lang.startswith('fr') else 'en'
     except:
         return 'en'
 
 # دالة إيجاد الفيديو الأنسب
 def get_video_for_input(text, df):
-    text = text.lower().strip()
-    language = detect_language(text)
+    normalized_text = normalize(text)
+    language = detect_language(normalized_text)
     df_lang = df[df['langue'] == language]
-    words = text.split()
+    words = normalized_text.split()
 
     # تطابق كامل
-    matches = df_lang[df_lang['phrase'].str.lower() == text]
+    matches = df_lang[df_lang['normalized_phrase'] == normalized_text]
     if not matches.empty:
         return [matches.iloc[0]['vedio']]
 
-    # تطابق جزئي
+    # تطابق جزئي كلمة بكلمة
     video_paths = []
     for word in words:
-        match = df_lang[df_lang['phrase'].str.lower() == word]
+        match = df_lang[df_lang['normalized_phrase'] == word]
         if not match.empty:
             video_paths.append(match.iloc[0]['vedio'])
 
     if video_paths:
         return video_paths
 
-    # تطابق سياقي
-    input_embedding = semantic_model.encode(text, convert_to_tensor=True)
-    phrases = df_lang['phrase'].tolist()
+    # تطابق سياقي (ذكاء اصطناعي)
+    input_embedding = semantic_model.encode(normalized_text, convert_to_tensor=True)
+    phrases = df_lang['normalized_phrase'].tolist()
     embeddings = semantic_model.encode(phrases, convert_to_tensor=True)
     cosine_scores = util.pytorch_cos_sim(input_embedding, embeddings)[0]
     best_match_idx = cosine_scores.argmax().item()
@@ -80,7 +86,7 @@ def get_video():
 
     results = get_video_for_input(user_text, df)
 
-    # تحويل المسارات إلى روابط مباشرة من مجلد static
+    # تحويل المسارات إلى روابط كاملة من مجلد static
     full_video_urls = [
         url_for('static', filename=f"{path}.mp4", _external=True)
         for path in results
@@ -88,6 +94,7 @@ def get_video():
 
     return jsonify({"videos": full_video_urls})
 
-# تشغيل الخادم
+# تشغيل السيرفر
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
+ 
